@@ -17,6 +17,10 @@ type Config struct {
 	BookingURL          string
 	CompatibiltyService string
 	UserService         string // All the other sevices wil come here first
+
+	BreakerMaxRequests uint32
+	BreakerTimeout     uint32
+	BreakerFailures    uint32
 }
 
 func Load() *Config {
@@ -31,6 +35,9 @@ func Load() *Config {
 		BookingURL:          getEnv("BOOKIN_URL", ""),
 		CompatibiltyService: getEnv("COMPT_SERV_URL", ""),
 		UserService:         getEnv("USER_SERVICE", ""),
+		BreakerMaxRequests:  uint32(getEnvInt("BREAKER_MAX_REQUESTS", 3)),
+		BreakerTimeout:      uint32(getEnvInt("BREAKER_TIMEOUT", 10)),
+		BreakerFailures:     uint32(getEnvInt("BREAKER_FAILURES", 5)),
 	}
 }
 
