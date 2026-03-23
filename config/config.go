@@ -14,9 +14,10 @@ type Config struct {
 	RateLimitMax    int
 	RateLimitWindow int // seconds
 
-	BookingURL          string
-	CompatibiltyService string
-	UserService         string // All the other sevices wil come here first
+	BookingURL             string
+	CompatibiltyServiceURL string
+	UserServiceURL         string
+	AuditServiceURL        string
 
 	BreakerMaxRequests uint32
 	BreakerTimeout     uint32
@@ -33,8 +34,8 @@ func Load() *Config {
 		RateLimitMax:        getEnvInt("RATE_LIMIT_MAX", 100),
 		RateLimitWindow:     getEnvInt("RATE_LIMIT_WINDOW", 60),
 		BookingURL:          getEnv("BOOKIN_URL", ""),
-		CompatibiltyService: getEnv("COMPT_SERV_URL", ""),
-		UserService:         getEnv("USER_SERVICE", ""),
+		CompatibiltyServiceURL: getEnv("COMPT_SERV_URL", ""),
+		UserServiceURL:         getEnv("USER_SERVICE", ""),
 		BreakerMaxRequests:  uint32(getEnvInt("BREAKER_MAX_REQUESTS", 3)),
 		BreakerTimeout:      uint32(getEnvInt("BREAKER_TIMEOUT", 10)),
 		BreakerFailures:     uint32(getEnvInt("BREAKER_FAILURES", 5)),
