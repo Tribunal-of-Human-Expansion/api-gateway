@@ -33,7 +33,7 @@ func Load() *Config {
 		JWTSecret:           getEnv("JWT_SECERET", ""),
 		RateLimitMax:        getEnvInt("RATE_LIMIT_MAX", 100),
 		RateLimitWindow:     getEnvInt("RATE_LIMIT_WINDOW", 60),
-		BookingURL:          getEnv("BOOKIN_URL", ""),
+		BookingURL:          getEnv("BOOKING_URL", ""),
 		CompatibiltyServiceURL: getEnv("COMPT_SERV_URL", ""),
 		UserServiceURL:         getEnv("USER_SERVICE", ""),
 		BreakerMaxRequests:  uint32(getEnvInt("BREAKER_MAX_REQUESTS", 3)),
