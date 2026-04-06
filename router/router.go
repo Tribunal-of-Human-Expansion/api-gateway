@@ -18,10 +18,25 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	})
 
 	app.Use(middleware.RateLimiter(cfg))
-	app.Use(middleware.Auth(cfg))
-	app.All("/bookings/*", proxy.Forward(cfg, "booking", cfg.BookingURL))
-	app.All("/compatibility/*", proxy.Forward(cfg, "compatibility", cfg.CompatibiltyServiceURL))
-	app.All("/users/*", proxy.Forward(cfg, "users", cfg.UserServiceURL))
-	app.All("/audit/*", proxy.Forward(cfg, "audit", cfg.AuditServiceURL))
 
+	// Ingress + SPA use /api prefix (public booking API — JWT still required on /bookings/* below)
+	if cfg.BookingURL != "" {
+		app.All("/api/bookings", proxy.Forward(cfg, "booking", cfg.BookingURL))
+		app.All("/api/bookings/*", proxy.Forward(cfg, "booking", cfg.BookingURL))
+	}
+
+	app.Use(middleware.Auth(cfg))
+
+	if cfg.BookingURL != "" {
+		app.All("/bookings/*", proxy.Forward(cfg, "booking", cfg.BookingURL))
+	}
+	if cfg.CompatibiltyServiceURL != "" {
+		app.All("/compatibility/*", proxy.Forward(cfg, "compatibility", cfg.CompatibiltyServiceURL))
+	}
+	if cfg.UserServiceURL != "" {
+		app.All("/users/*", proxy.Forward(cfg, "users", cfg.UserServiceURL))
+	}
+	if cfg.AuditServiceURL != "" {
+		app.All("/audit/*", proxy.Forward(cfg, "audit", cfg.AuditServiceURL))
+	}
 }
