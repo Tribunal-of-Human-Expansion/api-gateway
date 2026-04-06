@@ -1,31 +1,20 @@
-# Stage 1: Build
-FROM golang:1.23-alpine AS builder
-
-# Install git (needed for go mod to fetch from VCS)
-RUN apk add --no-cache git
-
-WORKDIR /app
-
-# Copy dependency files first — Docker caches this layer
-# Only re-downloads modules if go.mod or go.sum changes
+# --- build ---
+FROM golang:1.21-alpine AS build
+RUN apk add --no-cache ca-certificates git
+WORKDIR /src
 COPY go.mod go.sum ./
 RUN go mod download
-
-# Copy the rest of the source code
 COPY . .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+    go build -trimpath -ldflags="-s -w" -o /out/gateway .
 
-# Build a statically linked binary — no external dependencies at runtime
-RUN CGO_ENABLED=0 GOOS=linux go build -o gateway ./main.go
-
-# Stage 2: Run
-FROM alpine:3.19
-
-WORKDIR /app
-
-# Copy only the compiled binary from the builder stage
-# Final image has NO Go toolchain, no source code — just the binary
-COPY --from=builder /app/gateway .
-
+# --- runtime ---
+FROM alpine:3.20
+RUN apk add --no-cache ca-certificates wget \
+    && adduser -D -u 65532 gateway
+COPY --from=build /out/gateway /usr/local/bin/gateway
+USER 65532:65532
 EXPOSE 8080
-
-CMD ["./gateway"]
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD wget -qO- http://127.0.0.1:8080/health || exit 1
+ENTRYPOINT ["/usr/local/bin/gateway"]
