@@ -1,0 +1,30 @@
+services:
+  api-gateway:
+    build: .
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - BOOKING_SERVICE_URL=http://mock-service:9000
+      - COMPATIBILITY_SERVICE_URL=http://mock-service:9000
+      - ROUTE_SERVICE_URL=http://mock-service:9000
+      - USER_SERVICE_URL=http://mock-service:9000
+      - AUDIT_SERVICE_URL=http://mock-service:9000
+    depends_on:
+      - mock-service
+    networks:
+      - gtbs-network
+
+  # Simple mock server that returns 200 OK for any request
+  # Lets you test the gateway without real downstream services
+  mock-service:
+    image: kennethreitz/httpbin
+    ports:
+      - "9000:80"
+    networks:
+      - gtbs-network
+
+networks:
+  gtbs-network:
+    driver: bridge
