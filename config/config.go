@@ -28,17 +28,22 @@ func Load() *Config {
 	if err := godotenv.Load(); err != nil {
 		log.Println("Encountered error in loading the Dot env, please check if its there.")
 	}
+	jwt := getEnv("JWT_SECRET", "")
+	if jwt == "" {
+		jwt = getEnv("JWT_SECERET", "")
+	}
 	return &Config{
-		Port:                getEnv("PORT", "8080"),
-		JWTSecret:           getEnv("JWT_SECERET", ""),
-		RateLimitMax:        getEnvInt("RATE_LIMIT_MAX", 100),
-		RateLimitWindow:     getEnvInt("RATE_LIMIT_WINDOW", 60),
-		BookingURL:          getEnv("BOOKING_URL", ""),
+		Port:                   getEnv("PORT", "8080"),
+		JWTSecret:              jwt,
+		RateLimitMax:           getEnvInt("RATE_LIMIT_MAX", 100),
+		RateLimitWindow:        getEnvInt("RATE_LIMIT_WINDOW", 60),
+		BookingURL:             getEnv("BOOKING_URL", ""),
 		CompatibiltyServiceURL: getEnv("COMPT_SERV_URL", ""),
 		UserServiceURL:         getEnv("USER_SERVICE", ""),
-		BreakerMaxRequests:  uint32(getEnvInt("BREAKER_MAX_REQUESTS", 3)),
-		BreakerTimeout:      uint32(getEnvInt("BREAKER_TIMEOUT", 10)),
-		BreakerFailures:     uint32(getEnvInt("BREAKER_FAILURES", 5)),
+		AuditServiceURL:        getEnv("AUDIT_SERVICE_URL", ""),
+		BreakerMaxRequests:     uint32(getEnvInt("BREAKER_MAX_REQUESTS", 3)),
+		BreakerTimeout:         uint32(getEnvInt("BREAKER_TIMEOUT", 10)),
+		BreakerFailures:        uint32(getEnvInt("BREAKER_FAILURES", 5)),
 	}
 }
 
