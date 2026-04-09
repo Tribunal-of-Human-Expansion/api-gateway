@@ -2,3 +2,6 @@
 .env
 .cache/
 gateway
+target/
+*.class
+*.jar
