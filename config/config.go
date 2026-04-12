@@ -32,7 +32,7 @@ func Load() *Config {
 	}
 	jwt := getEnv("JWT_SECRET", "")
 	if jwt == "" {
-		jwt = getEnv("JWT_SECERET", "")
+		jwt = getEnv("JWT_SECERET", "secret")
 	}
 	return &Config{
 		Port:                   getEnv("PORT", "8080"),

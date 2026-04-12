@@ -18,7 +18,6 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	})
 
 	app.Use(middleware.RateLimiter(cfg))
-	app.Use(middleware.Redirector());
 
 	// Ingress + SPA use /api prefix (public booking API — JWT still required on /bookings/* below)
 	if cfg.BookingURL != "" {
@@ -27,6 +26,7 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	}
 
 	app.Use(middleware.Auth(cfg))
+	app.Use(middleware.Redirector());
 
 	if cfg.BookingURL != "" {
 		registerProxy(app, "/bookings", proxy.ForwardPrefix(cfg, "booking", cfg.BookingURL, "/bookings", "/api/bookings"))

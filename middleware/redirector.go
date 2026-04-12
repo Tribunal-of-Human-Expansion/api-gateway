@@ -31,8 +31,8 @@ func Redirector() fiber.Handler {
             // Expected format: ROUTE-SOURCE-DESTINATION
             if len(parts) >= 3 {
                 source := parts[1]
-                fmt.Printf("[GTBS Gateway] routeId=%s | source=%s | path=%s\n",
-                    routeID, source, c.Path())
+                fmt.Printf("[GTBS Gateway] routeId=%s | source=%s | path=%s\n Redirecting Request to nearest source of %s",
+                    routeID, source, c.Path(), source);
             } else {
                 fmt.Printf("[GTBS Gateway] malformed routeId=%s | path=%s\n",
                     routeID, c.Path())
