@@ -18,6 +18,7 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	})
 
 	app.Use(middleware.RateLimiter(cfg))
+	app.Use(middleware.Redirector());
 
 	// Ingress + SPA use /api prefix (public booking API — JWT still required on /bookings/* below)
 	if cfg.BookingURL != "" {
