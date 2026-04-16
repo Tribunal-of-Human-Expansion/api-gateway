@@ -4,11 +4,50 @@ import (
 	"api-gateway/config"
 	"api-gateway/middleware"
 	"api-gateway/proxy"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 func Setup(app *fiber.App, cfg *config.Config) {
+	app.Use(func(c *fiber.Ctx) error {
+		origin := c.Get("Origin")
+		allowOrigins := cfg.CORSAllowOrigins
+		if c.Method() == fiber.MethodOptions {
+			if origin != "" && allowOrigins != "" {
+				for _, allowed := range strings.Split(allowOrigins, ",") {
+					if strings.TrimSpace(allowed) == origin {
+						c.Set("Access-Control-Allow-Origin", origin)
+						break
+					}
+				}
+			}
+			c.Set("Vary", "Origin, Access-Control-Request-Method, Access-Control-Request-Headers")
+			c.Set("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
+			c.Set("Access-Control-Allow-Headers", "Origin,Content-Type,Accept,Authorization,Cache-Control,Pragma")
+			return c.SendStatus(fiber.StatusNoContent)
+		}
+		err := c.Next()
+		if origin != "" && allowOrigins != "" {
+			for _, allowed := range strings.Split(allowOrigins, ",") {
+				if strings.TrimSpace(allowed) == origin {
+					c.Set("Access-Control-Allow-Origin", origin)
+					break
+				}
+			}
+		}
+		c.Set("Vary", "Origin, Access-Control-Request-Method, Access-Control-Request-Headers")
+		c.Set("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS")
+		c.Set("Access-Control-Allow-Headers", "Origin,Content-Type,Accept,Authorization,Cache-Control,Pragma")
+		return err
+	})
+
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: cfg.CORSAllowOrigins,
+		AllowMethods: "GET,POST,PUT,DELETE,OPTIONS",
+		AllowHeaders: "Origin,Content-Type,Accept,Authorization,Cache-Control,Pragma",
+	}))
 
 	// Health check — no auth, registered first
 	app.Get("/health", func(c *fiber.Ctx) error {
