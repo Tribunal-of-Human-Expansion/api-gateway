@@ -10,11 +10,13 @@ import (
 )
 
 func Setup(app *fiber.App, cfg *config.Config) {
-	app.Use(cors.New(cors.Config{
-		AllowOrigins: cfg.CORSAllowOrigins,
-		AllowMethods: "GET,POST,PUT,DELETE,OPTIONS",
-		AllowHeaders: "Origin,Content-Type,Accept,Authorization,Cache-Control,Pragma",
-	}))
+	if cfg.CORSAllowOrigins != "" {
+		app.Use(cors.New(cors.Config{
+			AllowOrigins: cfg.CORSAllowOrigins,
+			AllowMethods: "GET,POST,PUT,DELETE,OPTIONS",
+			AllowHeaders: "Origin,Content-Type,Accept,Authorization,Cache-Control,Pragma",
+		}))
+	}
 
 	// Health check — no auth, registered first
 	app.Get("/health", func(c *fiber.Ctx) error {
@@ -32,7 +34,7 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	}
 
 	app.Use(middleware.Auth(cfg))
-	app.Use(middleware.Redirector());
+	app.Use(middleware.Redirector())
 
 	if cfg.BookingURL != "" {
 		registerProxy(app, "/bookings", proxy.ForwardPrefix(cfg, "booking", cfg.BookingURL, "/bookings", "/api/bookings"))

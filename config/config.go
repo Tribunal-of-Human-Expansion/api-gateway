@@ -20,7 +20,7 @@ type Config struct {
 	UserServiceURL         string
 	AuditServiceURL        string
 	AuthorityServiceURL    string
-	CORSAllowOrigins      string
+	CORSAllowOrigins       string
 
 	BreakerMaxRequests uint32
 	BreakerTimeout     uint32
