@@ -18,6 +18,7 @@ type Config struct {
 	CompatibiltyServiceURL string
 	UserServiceURL         string
 	AuditServiceURL        string
+	RouteManagementURL     string
 
 	BreakerMaxRequests uint32
 	BreakerTimeout     uint32
@@ -41,6 +42,7 @@ func Load() *Config {
 		CompatibiltyServiceURL: getEnv("COMPT_SERV_URL", ""),
 		UserServiceURL:         getEnv("USER_SERVICE", ""),
 		AuditServiceURL:        getEnv("AUDIT_SERVICE_URL", ""),
+		RouteManagementURL:     getEnv("ROUTE_MGMT_URL", ""),
 		BreakerMaxRequests:     uint32(getEnvInt("BREAKER_MAX_REQUESTS", 3)),
 		BreakerTimeout:         uint32(getEnvInt("BREAKER_TIMEOUT", 10)),
 		BreakerFailures:        uint32(getEnvInt("BREAKER_FAILURES", 5)),

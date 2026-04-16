@@ -39,4 +39,7 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	if cfg.AuditServiceURL != "" {
 		app.All("/audit/*", proxy.Forward(cfg, "audit", cfg.AuditServiceURL))
 	}
+	if cfg.RouteManagementURL != "" {
+		app.All("/routes/*", proxy.Forward(cfg, "routes", cfg.RouteManagementURL))
+	}
 }
