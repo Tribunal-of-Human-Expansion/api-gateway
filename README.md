@@ -90,6 +90,10 @@ COMPATIBILITY_SERVICE_URL=http://localhost:8082
 ROUTE_SERVICE_URL=http://localhost:8083
 USER_SERVICE_URL=http://localhost:8084
 AUDIT_SERVICE_URL=http://localhost:8085
+
+# CORS (optional; set for local frontend development)
+# Example: CORS_ALLOW_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+CORS_ALLOW_ORIGINS=
 ```
 
 ### 4. Run the Gateway
@@ -211,6 +215,7 @@ The breaker trips to OPEN after `BREAKER_FAILURES` consecutive failures, waits `
 | `ROUTE_SERVICE_URL` | — | Route Management Service base URL |
 | `USER_SERVICE_URL` | — | User & Notification Service base URL |
 | `AUDIT_SERVICE_URL` | — | Audit & Observability Service base URL |
+| `CORS_ALLOW_ORIGINS` | — | Comma-separated allowed CORS origins; when unset, CORS middleware is disabled |
 
 ---
 
@@ -238,6 +243,7 @@ COMPATIBILITY_SERVICE_URL=http://localhost:8082
 ROUTE_SERVICE_URL=http://localhost:8083
 USER_SERVICE_URL=http://localhost:8084
 AUDIT_SERVICE_URL=http://localhost:8085
+CORS_ALLOW_ORIGINS=
 ```
 
 
