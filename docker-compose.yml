@@ -6,11 +6,12 @@ services:
     env_file:
       - .env
     environment:
-      - BOOKING_SERVICE_URL=http://mock-service:9000
-      - COMPATIBILITY_SERVICE_URL=http://mock-service:9000
+      - BOOKING_URL=http://mock-service:9000
+      - COMPT_SERV_URL=http://mock-service:9000
       - ROUTE_SERVICE_URL=http://mock-service:9000
-      - USER_SERVICE_URL=http://mock-service:9000
+      - USER_SERVICE=http://mock-service:9000
       - AUDIT_SERVICE_URL=http://mock-service:9000
+      - AUTHORITY_SERVICE_URL=http://mock-service:9000
     depends_on:
       - mock-service
     networks:

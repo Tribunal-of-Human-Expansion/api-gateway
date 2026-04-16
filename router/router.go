@@ -26,20 +26,33 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	}
 
 	app.Use(middleware.Auth(cfg))
+	app.Use(middleware.Redirector());
 
 	if cfg.BookingURL != "" {
-		app.All("/bookings/*", proxy.Forward(cfg, "booking", cfg.BookingURL))
+		registerProxy(app, "/bookings", proxy.ForwardPrefix(cfg, "booking", cfg.BookingURL, "/bookings", "/api/bookings"))
 	}
 	if cfg.CompatibiltyServiceURL != "" {
-		app.All("/compatibility/*", proxy.Forward(cfg, "compatibility", cfg.CompatibiltyServiceURL))
+		registerProxy(app, "/compatibility", proxy.ForwardPrefix(cfg, "compatibility", cfg.CompatibiltyServiceURL, "/compatibility", "/api/v1"))
+	}
+	if cfg.RouteServiceURL != "" {
+		registerProxy(app, "/routes", proxy.ForwardPrefix(cfg, "routes", cfg.RouteServiceURL, "/routes", "/api/routes"))
 	}
 	if cfg.UserServiceURL != "" {
-		app.All("/users/*", proxy.Forward(cfg, "users", cfg.UserServiceURL))
+		registerProxy(app, "/users", proxy.Forward(cfg, "users", cfg.UserServiceURL))
+		registerProxy(app, "/notifications", proxy.Forward(cfg, "notifications", cfg.UserServiceURL))
 	}
 	if cfg.AuditServiceURL != "" {
-		app.All("/audit/*", proxy.Forward(cfg, "audit", cfg.AuditServiceURL))
+		registerProxy(app, "/audit", proxy.ForwardPrefix(cfg, "audit", cfg.AuditServiceURL, "/audit", "/api/v1/audit"))
+	}
+	if cfg.AuthorityServiceURL != "" {
+		registerProxy(app, "/authority", proxy.Forward(cfg, "authority", cfg.AuthorityServiceURL))
 	}
 	if cfg.RouteManagementURL != "" {
 		app.All("/routes/*", proxy.Forward(cfg, "routes", cfg.RouteManagementURL))
 	}
+}
+
+func registerProxy(app *fiber.App, prefix string, handler fiber.Handler) {
+	app.All(prefix, handler)
+	app.All(prefix+"/*", handler)
 }
