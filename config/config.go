@@ -19,6 +19,7 @@ type Config struct {
 	RouteServiceURL        string
 	UserServiceURL         string
 	AuditServiceURL        string
+	RouteManagementURL     string
 	AuthorityServiceURL    string
 	CORSAllowOrigins       string
 
@@ -45,6 +46,7 @@ func Load() *Config {
 		RouteServiceURL:        getEnvAny([]string{"ROUTE_SERVICE_URL"}, ""),
 		UserServiceURL:         getEnvAny([]string{"USER_SERVICE", "USER_SERVICE_URL"}, ""),
 		AuditServiceURL:        getEnvAny([]string{"AUDIT_SERVICE_URL"}, ""),
+    RouteManagementURL:     getEnv("ROUTE_MGMT_URL", ""),
 		AuthorityServiceURL:    getEnvAny([]string{"AUTHORITY_SERVICE_URL", "ADMIN_AUTHORITY_SERVICE_URL"}, ""),
 		CORSAllowOrigins:       getEnv("CORS_ALLOW_ORIGINS", ""),
 		BreakerMaxRequests:     uint32(getEnvInt("BREAKER_MAX_REQUESTS", 3)),

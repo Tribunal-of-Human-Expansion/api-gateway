@@ -55,6 +55,9 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	if cfg.AuthorityServiceURL != "" {
 		registerProxy(app, "/authority", proxy.Forward(cfg, "authority", cfg.AuthorityServiceURL))
 	}
+	if cfg.RouteManagementURL != "" {
+		app.All("/routes/*", proxy.Forward(cfg, "routes", cfg.RouteManagementURL))
+	}
 }
 
 func registerProxy(app *fiber.App, prefix string, handler fiber.Handler) {
