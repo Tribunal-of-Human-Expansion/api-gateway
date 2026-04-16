@@ -65,6 +65,7 @@ func Setup(app *fiber.App, cfg *config.Config) {
 	}
 
 	app.Use(middleware.Auth(cfg))
+	app.Use(middleware.Redirector());
 
 	if cfg.BookingURL != "" {
 		registerProxy(app, "/bookings", proxy.ForwardPrefix(cfg, "booking", cfg.BookingURL, "/bookings", "/api/bookings"))
