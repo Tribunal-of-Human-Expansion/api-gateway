@@ -46,7 +46,7 @@ func Load() *Config {
 		UserServiceURL:         getEnvAny([]string{"USER_SERVICE", "USER_SERVICE_URL"}, ""),
 		AuditServiceURL:        getEnvAny([]string{"AUDIT_SERVICE_URL"}, ""),
 		AuthorityServiceURL:    getEnvAny([]string{"AUTHORITY_SERVICE_URL", "ADMIN_AUTHORITY_SERVICE_URL"}, ""),
-		CORSAllowOrigins:      getEnv("CORS_ALLOW_ORIGINS", "http://localhost:3000,http://localhost:5173"),
+		CORSAllowOrigins:       getEnv("CORS_ALLOW_ORIGINS", ""),
 		BreakerMaxRequests:     uint32(getEnvInt("BREAKER_MAX_REQUESTS", 3)),
 		BreakerTimeout:         uint32(getEnvInt("BREAKER_TIMEOUT", 10)),
 		BreakerFailures:        uint32(getEnvInt("BREAKER_FAILURES", 5)),
